@@ -6,15 +6,16 @@ const app = express(); //server object
 const ServerConfig = require("../config/serverConfig");
 const User = require("./schema/user.schema");
 const authRouter = require("./routers/auth.route");
-
+const cookieParser = require("cookie-parser");
+const { isLoggedIn } = require("./validation/auth.validator");
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 app.use("/users", userRouter); //connects the router to server
 app.use("/carts", cartRouter); // connects the cart router to server
 app.use("/auth", authRouter);
-app.post("/hello", (req, res) => {
+app.get("/hello", isLoggedIn, (req, res) => {
   console.log(req.body);
   return res.json({ message: "recieved" });
 });
