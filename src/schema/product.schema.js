@@ -5,14 +5,14 @@ const ProductSchema = mongoose.Schema(
     productName: {
       type: String,
       required: true,
-      maxlength: 8,
+      maxlength: 20,
       trim: true,
     },
-    productDescription: {
+    description: {
       type: String,
       required: true,
       minlength: 20,
-      maxlength: 30,
+      maxlength: 100,
       trim: true,
     },
 
@@ -31,7 +31,7 @@ const ProductSchema = mongoose.Schema(
       default: "veg",
     },
     InStock: {
-      type: boolean,
+      type: Boolean,
       required: [true, "In stock status is required"],
       default: true,
     },
@@ -43,4 +43,4 @@ const ProductSchema = mongoose.Schema(
 
 const Product = mongoose.model("Product", ProductSchema);
 
-module.exports = Products;
+module.exports = Product;

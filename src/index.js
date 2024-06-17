@@ -12,6 +12,9 @@ const multer = require("multer");
 const uploader = require("./middlewares/multer.middleware");
 const cloudinary = require("../config/cloudinary.config");
 const fs = require("fs");
+
+const productRouter = require("./routers/product.router");
+
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
@@ -19,17 +22,19 @@ app.use(cookieParser());
 app.use("/users", userRouter); //connects the router to server
 app.use("/carts", cartRouter); // connects the cart router to server
 app.use("/auth", authRouter);
-app.post("/photos", uploader.single("incomingfile"), async (req, res) => {
-  const result = await cloudinary.uploader.upload(req.file.path);
+// app.post("/photos", uploader.single("incomingfile"), async (req, res) => {
+//   const result = await cloudinary.uploader.upload(req.file.path);
 
-  console.log(req.file.path);
-  await fs.unlink(req.file.path,function(err){
-    if(err) return console.log(err);
-    console.log('file deleted successfully');
-}); 
+//   console.log(req.file.path);
+//   await fs.unlink(req.file.path,function(err){
+//     if(err) return console.log(err);
+//     console.log('file deleted successfully');
+// });
 
-  return res.json({ message: "ok" });
-});
+//   return res.json({ message: "ok" });
+// });
+
+app.use("/products", productRouter);
 
 app.get("/hello", isLoggedIn, (req, res) => {
   console.log(req.body);
