@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema(
       minlength: [10, "password should be  10 character long"],
       maxlength: [10, "password should be  10 character long"],
     },
+    role: {
+      type: String,
+      enum: ["USER", "ADMIN"],
+      default: "USER",
+    },
   },
   { timestamps: true, version: false }
 );

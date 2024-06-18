@@ -25,10 +25,17 @@ async function login(authDetails) {
   // if password validate create a token and return
 
   let token;
+  
   try {
-    token = await jwt.sign({ email: user.email, id: user.id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRY,
-    });
+    const Userrole = user.role ? user.role : "USER";
+    console.log(Userrole);
+    token = await jwt.sign(
+      { email: user.email, id: user.id, role: Userrole },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRY,
+      }
+    );
   } catch (error) {
     throw { message: "not able to login", statusCode: 401 };
   }

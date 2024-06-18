@@ -22,17 +22,7 @@ app.use(cookieParser());
 app.use("/users", userRouter); //connects the router to server
 app.use("/carts", cartRouter); // connects the cart router to server
 app.use("/auth", authRouter);
-// app.post("/photos", uploader.single("incomingfile"), async (req, res) => {
-//   const result = await cloudinary.uploader.upload(req.file.path);
 
-//   console.log(req.file.path);
-//   await fs.unlink(req.file.path,function(err){
-//     if(err) return console.log(err);
-//     console.log('file deleted successfully');
-// });
-
-//   return res.json({ message: "ok" });
-// });
 
 app.use("/products", productRouter);
 
