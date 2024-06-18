@@ -16,6 +16,7 @@ async function addProduct(req, res) {
       productPrice: req.body.productPrice,
       Category: req.body.Category,
       InStock: req.body.InStock,
+      quantity: req.body.quantity,
     });
 
     return res.status(201).json({

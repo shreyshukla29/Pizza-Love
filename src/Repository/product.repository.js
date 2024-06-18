@@ -41,7 +41,7 @@ async function deleteProduct(productId) {
     
     console.log(error);
     if (error == "CastError") {
-      console.log("sdasknfskd");
+      
     }
     throw new internalServerError();
   }

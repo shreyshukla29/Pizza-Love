@@ -35,6 +35,11 @@ const ProductSchema = mongoose.Schema(
       required: [true, "In stock status is required"],
       default: true,
     },
+    quantity: {
+      type: Number,
+      required:true,
+      default:10
+    },
   },
   {
     timestamps: true,
