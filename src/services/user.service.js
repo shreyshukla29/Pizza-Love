@@ -1,5 +1,5 @@
 const UserRepository = require("../Repository/user.repository");
-
+const {createCart}=require('../Repository/cart.repository')
 class UserService {
   constructor(UserRepository) {
     this.UserRepository = UserRepository;
@@ -32,6 +32,8 @@ class UserService {
     if (!newUser) {
       throw { reason: "something went wrong", statusCode: 500 };
     }
+
+    await createCart(newUser._id);
 
     // 2, if not then we create the user
     // 3 . return the details of created user

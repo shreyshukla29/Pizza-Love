@@ -28,7 +28,7 @@ async function login(authDetails) {
   
   try {
     const Userrole = user.role ? user.role : "USER";
-    console.log(Userrole);
+    
     token = await jwt.sign(
       { email: user.email, id: user.id, role: Userrole },
       JWT_SECRET,

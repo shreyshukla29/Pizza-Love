@@ -8,7 +8,7 @@ async function createProduct(productDetails) {
 
     return response;
   } catch (error) {
-    console.log("i mhere ");
+  
 
     if (error.name === "ValidationError") {
       const errorMessageList = Object.keys(error.errors).map((property) => {

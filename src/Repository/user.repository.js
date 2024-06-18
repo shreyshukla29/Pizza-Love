@@ -1,4 +1,6 @@
 const User = require("../schema/user.schema");
+
+
 class UserRepository {
   async findUser(parameter) {
     try {
