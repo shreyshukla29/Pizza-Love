@@ -29,4 +29,18 @@ async function getOrderDetails(orderId) {
    
 }
 
-module.exports = { createOrder ,getOrderDetails };
+
+async function getAllOrders(userId){
+
+  try {
+    const order = await Order.find({user:userId});
+    return order;
+ } catch (error) {
+    console.log(error);
+    throw new internalServerError();
+    
+}
+
+}
+
+module.exports = { createOrder ,getOrderDetails,getAllOrders };

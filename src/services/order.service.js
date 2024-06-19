@@ -1,5 +1,5 @@
 const { getCartByUserId } = require("../Repository/cart.repository");
-const { createOrder , getOrderDetails } = require("../Repository/order.repository");
+const { createOrder , getOrderDetails ,getAllOrders } = require("../Repository/order.repository");
 const BadRequestError = require("../utils/BadRequest");
 const {emptyCart} = require('../services/cart.service')
 async function requestOrder(orderDetails, userId) {
@@ -63,4 +63,34 @@ async function requestOrderCancel(orderId) {
     
 }
 
-module.exports = { requestOrder , requestOrderCancel };
+async function getOrderDetailsofUser(orderId) {
+
+  try {
+    const order = await getOrderDetails (orderId);
+    if (!order) {
+        throw new NotFoundError("Order");
+      }
+      return order;
+} catch (error) {
+    throw new internalServerError();
+}
+  
+}
+
+
+async function getAllOrderDetails(userId){
+
+  try {
+    const allorder = await getAllOrders (userId);
+    if (!allorder) {
+        throw new NotFoundError("Orders");
+      }
+      return allorder;
+} catch (error) {
+    throw new internalServerError();
+}
+  
+  
+}
+
+module.exports = { requestOrder , requestOrderCancel ,getOrderDetailsofUser,getAllOrderDetails};
