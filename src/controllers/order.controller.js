@@ -1,4 +1,4 @@
-const { requestOrder , requestOrderCancel,getOrderDetailsofUser,getAllOrderDetails } = require("../services/order.service");
+const { requestOrder , requestOrderCancel,getOrderDetailsofUser,getAllOrderDetails, updateOrderStatus } = require("../services/order.service");
 async function placeOrder(req, res) {
   const orderDetails = req.body;
   const userId = req.user.id;
@@ -76,7 +76,7 @@ async function orderDetails(req ,res) {
         data:order,
         message:'order fetch succesfully'
       })
-}  catch (error) {
+   }  catch (error) {
     if (error instanceof AppError) {
       if (error instanceof AppError) {
         return res.status(error.statusCode).json({
@@ -131,4 +131,39 @@ async function allOrderDetailsofUser(req ,res){
 
 }
 
-module.exports = { placeOrder , cancelOrder,orderDetails,allOrderDetailsofUser };
+async function changeOrderStatus(req ,res) {
+
+  const status = req.body.status;
+
+  try {
+
+    const order = await updateOrderStatus(req.paramse.orderId, status);
+
+    return res.status(200).json({
+      sucess:true,
+      data:order,
+      message:'order status updated succesfully'
+    })
+    
+  }  catch (error) {
+    if (error instanceof AppError) {
+      if (error instanceof AppError) {
+        return res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+          error: error,
+          data: {},
+        });
+      }
+      return res.status(500).json({
+        success: false,
+        message: "Something went wrong",
+        error: error,
+        data: {},
+      });
+    }
+  }
+  
+}
+
+module.exports = { placeOrder , cancelOrder,orderDetails,allOrderDetailsofUser , changeOrderStatus};

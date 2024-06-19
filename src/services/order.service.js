@@ -71,9 +71,9 @@ async function getOrderDetailsofUser(orderId) {
         throw new NotFoundError("Order");
       }
       return order;
-} catch (error) {
+   }   catch (error) {
     throw new internalServerError();
-}
+   }
   
 }
 
@@ -86,11 +86,32 @@ async function getAllOrderDetails(userId){
         throw new NotFoundError("Orders");
       }
       return allorder;
-} catch (error) {
+  } catch (error) {
     throw new internalServerError();
-}
+  }
   
   
 }
 
-module.exports = { requestOrder , requestOrderCancel ,getOrderDetailsofUser,getAllOrderDetails};
+async function updateOrderStatus(orderId , status) {
+
+  try {
+
+    const order = await getOrderDetails(orderId);
+    if(!order){
+      throw new NotFoundError("Order");
+    }
+
+    order.status =status;
+    await order.save();
+
+    return order;
+
+    
+  } catch (error) {
+    throw new internalServerError();
+
+  }
+  
+}
+module.exports = { requestOrder , requestOrderCancel ,getOrderDetailsofUser,getAllOrderDetails , updateOrderStatus};
