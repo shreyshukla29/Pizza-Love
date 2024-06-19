@@ -57,13 +57,27 @@ async function findProduct(id) {
 async function productDelete(id) {
   const productId = id;
 
-  const Product = await deleteProduct(productId);
-
+try {
+  const Product = await findProduct(id);
   if (!Product) {
     throw new NotFoundError("Product");
   }
 
+  const imageurl = Product.productImage;
+  const parsedUrl = url.parse(imageUrl);
+  const pathname = parsedUrl.pathname.split('/');
+  const filename = pathname[pathname.length - 1];
+  const publicId = filename.split('.')[0]; // Assuming the file has an extension
+  const result = await cloudinary.uploader.destroy(publicId);
+
+  await deleteProduct(productId);
+
   return Product;
+} catch (error) {
+  throw internalServerError();
+}
+
+
 }
 module.exports = {
   productCreate,
