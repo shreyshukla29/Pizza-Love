@@ -3,14 +3,22 @@ const NotFoundError = require("../utils/notFoundError");
 const { getProduct } = require("../Repository/product.repository");
 const BadRequestError = require("../utils/BadRequest");
 const AppError = require("../utils/appError");
+const internalServerError = require('../utils/notFoundError')
+
 async function getCart(userId) {
-  const cart = await getCartByUserId(userId);
 
-  if (!cart) {
-    throw new NotFoundError("Cart");
+  try {
+    const cart = await getCartByUserId(userId);
+
+    if (!cart) {
+      throw new NotFoundError("Cart");
+    }
+    return cart;
+  } catch (error) {
+    throw new internalServerError();
+    
   }
-
-  return cart;
+ 
 }
 
 async function modifyCart(userId, productId,shouldAdd =true) {
@@ -64,4 +72,24 @@ async function modifyCart(userId, productId,shouldAdd =true) {
 
   return cart.populate('items.product');
 }
-module.exports = { getCart, modifyCart };
+
+
+async function emptyCart(userId){
+
+  try {
+    const cart = await getCart(userId);
+    if(!cart){
+      throw new NotFoundError('Cart')
+     
+    }
+    cart.items =[];
+    cart.save();
+    return cart;
+  } catch (error) {
+    throw new internalServerError();
+  }
+  
+
+}
+
+module.exports = { getCart, modifyCart ,emptyCart };

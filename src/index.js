@@ -11,8 +11,8 @@ const { isLoggedIn } = require("./validation/auth.validator");
 const multer = require("multer");
 const uploader = require("./middlewares/multer.middleware");
 const cloudinary = require("../config/cloudinary.config");
+const orderRouter = require("./routers/order.routes");
 const fs = require("fs");
-
 const productRouter = require("./routers/product.router");
 
 app.use(express.json());
@@ -22,9 +22,9 @@ app.use(cookieParser());
 app.use("/users", userRouter); //connects the router to server
 app.use("/carts", cartRouter); // connects the cart router to server
 app.use("/auth", authRouter);
-
-
 app.use("/products", productRouter);
+
+app.use("/orders" , orderRouter);
 
 app.get("/hello", isLoggedIn, (req, res) => {
   console.log(req.body);
