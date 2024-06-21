@@ -1,6 +1,6 @@
 const Cart = require("../schema/cart.schema");
 const internalServerError = require("../utils/internalServerError");
-const BadRequestError = require('../utils/Badrequest')
+const BadRequestError = require('../utils/BadRequest');
 async function createCart(userId) {
   try {
     const newCAart = await Cart.create({
