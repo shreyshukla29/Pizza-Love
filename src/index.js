@@ -26,10 +26,7 @@ app.use("/products", productRouter);
 
 app.use("/orders" , orderRouter);
 
-app.get("/hello", isLoggedIn, (req, res) => {
-  console.log(req.body);
-  return res.json({ message: "recieved" });
-});
+
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
