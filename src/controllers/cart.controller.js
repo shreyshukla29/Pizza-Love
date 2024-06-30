@@ -1,6 +1,6 @@
 const { getCart, modifyCart, emptyCart } = require("../services/cart.service");
 const AppError = require("../utils/appError");
-
+const mongoose = require('mongoose')
 async function getCartbyUser(req, res) {
   const userId = req.user.id;
 
@@ -12,22 +12,24 @@ async function getCartbyUser(req, res) {
       error: {},
       data: cart,
     });
-  } catch (error) {
-    if (error instanceof AppError) {
-      return res.status(error.statusCode).json({
-        success: false,
-        message: error.message,
-        error: error,
-        data: {},
-      });
+  }  catch (error) {
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
+          success: false,
+          message: "Something went wrong",
+          error: error,
+          data: {},
+        });
+     
     }
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error,
-      data: {},
-    });
-  }
 }
 
 async function modifyProductToCart(req, res) {
@@ -43,56 +45,55 @@ async function modifyProductToCart(req, res) {
       error: {},
       data: cart,
     });
-  } catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+  }  catch (error) {
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
 }
 
 async function clearCart(req, res) {
   const userId = req.user.id;
-  console.log('here');
 
   try {
     const cart = await emptyCart(userId);
     return res.json({
       sucess:true,
       data:cart,
-      message:'cart delete succesfully'
+      message:'cart clear succesfully',
+      error:{}
     }).status(200);
   }  catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
-
 }
 
 module.exports = {

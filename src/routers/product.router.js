@@ -1,7 +1,7 @@
 const {
   addProduct,
   getProduct,
-  deleteProductById,
+  deleteProductById,getProducts
 } = require("../controllers/product.controller");
 const { isAdmin, isLoggedIn } = require("../validation/auth.validator");
 
@@ -17,7 +17,9 @@ productRouter.post(
   addProduct
 );
 
+
 productRouter.get("/:id", getProduct);
-productRouter.delete("/delete/:id", deleteProductById);
+productRouter.get('/',getProducts);
+productRouter.delete("/delete/:id", isLoggedIn,isAdmin,deleteProductById);
 
 module.exports = productRouter;

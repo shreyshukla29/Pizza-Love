@@ -36,14 +36,42 @@ async function isLoggedIn(req, res, next) {
   }
 }
 
+async function checkInvalidToken(req, res, next) {
+
+  console.log('checking token validation')
+  const token = req.cookies["authToken"];
+  try {
+    // Verify the token using the secret key
+    await jwt.verify(token, JWT_SECRET);
+    return res.status(201).json({
+      message: "valid token",
+      data: {},
+      error: {},
+      isValid: true,
+    });
+  } catch (err) {
+    // Handle different types of errors
+    if (err.name === "TokenExpiredError") {
+      const decode = jwt.decode(token);
+
+      req.user = {
+        email: decode.email,
+        id: decode.id,
+        role: decode.role,
+      };
+      next();
+    } else {
+      return res
+        .json({ isValid: false, message: "Invalid", verfiy: false })
+        .status(500);
+    }
+  }
+}
 // this function check if authenticate user is admin or not
 
 function isAdmin(req, res, next) {
   const LoggedInUser = req.user;
-
-
   if (LoggedInUser.role === "ADMIN") {
-    console.log("is admin");
     next();
   } else {
     return res.status(401).json({
@@ -60,4 +88,5 @@ function isAdmin(req, res, next) {
 module.exports = {
   isLoggedIn,
   isAdmin,
+  checkInvalidToken,
 };

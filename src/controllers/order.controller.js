@@ -1,4 +1,6 @@
 const { requestOrder , requestOrderCancel,getOrderDetailsofUser,getAllOrderDetails, updateOrderStatus } = require("../services/order.service");
+const AppError = require('../utils/appError')
+const mongoose = require('mongoose')
 async function placeOrder(req, res) {
   const orderDetails = req.body;
   const userId = req.user.id;
@@ -8,27 +10,28 @@ async function placeOrder(req, res) {
     return res.status(200).json({
         sucess:true,
         data:order,
-        message:'order placed succesfully'
+        message:'order placed succesfully',
+        error:{}
       });
 
   }  catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
 }
 
 
@@ -41,11 +44,12 @@ async function cancelOrder(req ,res){
         return res.status(200).json({
             sucess:true,
             data:order,
-            message:'order cancelled succesfully'
+            message:'order cancelled succesfully',
+            error:{}
           })
     }  catch (error) {
-        if (error instanceof AppError) {
-          if (error instanceof AppError) {
+
+      if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
             return res.status(error.statusCode).json({
               success: false,
               message: error.message,
@@ -59,7 +63,7 @@ async function cancelOrder(req ,res){
             error: error,
             data: {},
           });
-        }
+       
       }
 
 }
@@ -74,26 +78,27 @@ async function orderDetails(req ,res) {
     return res.status(200).json({
         sucess:true,
         data:order,
-        message:'order fetch succesfully'
+        message:'order fetch succesfully',
+        error:{}
       })
-   }  catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+   }   catch (error) {
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
 
   
 }
@@ -106,27 +111,28 @@ async function allOrderDetailsofUser(req ,res){
     return res.status(200).json({
         sucess:true,
         data:order,
-        message:'orders fetch  succesfully'
+        message:'orders fetch  succesfully',
+        error:{}
       });
 
   }  catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
 
 
 }
@@ -142,27 +148,28 @@ async function changeOrderStatus(req ,res) {
     return res.status(200).json({
       sucess:true,
       data:order,
-      message:'order status updated succesfully'
+      message:'order status updated succesfully',
+      error:{}
     })
     
   }  catch (error) {
-    if (error instanceof AppError) {
-      if (error instanceof AppError) {
-        return res.status(error.statusCode).json({
+
+    if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
+          return res.status(error.statusCode).json({
+            success: false,
+            message: error.message,
+            error: error,
+            data: {},
+          });
+        }
+        return res.status(500).json({
           success: false,
-          message: error.message,
+          message: "Something went wrong",
           error: error,
           data: {},
         });
-      }
-      return res.status(500).json({
-        success: false,
-        message: "Something went wrong",
-        error: error,
-        data: {},
-      });
+     
     }
-  }
   
 }
 

@@ -1,23 +1,26 @@
 const Cart = require("../schema/cart.schema");
 const internalServerError = require("../utils/internalServerError");
-const BadRequestError = require('../utils/BadRequest');
+const BadRequestError = require("../utils/BadRequest");
+const mongoose = require('mongoose')
 async function createCart(userId) {
   try {
-    const newCAart = await Cart.create({
+    const newCart = await Cart.create({
       user: userId,
     });
-  } catch (error) {
+   
+  }  catch (error) {
     if (error.name === "ValidationError") {
       const errorMessageList = Object.keys(error.errors).map((property) => {
         return error.errors[property].message;
       });
       throw new BadRequestError(errorMessageList);
-    } else {
-      throw new internalServerError();
+    } 
+   else if (error instanceof mongoose.Error.CastError) {
+    throw ({message:"Invalid ID format",statusCode:500});
     }
+    throw new internalServerError();
   }
 }
-
 
 async function getCartByUserId(userId){
     try {
@@ -27,9 +30,16 @@ async function getCartByUserId(userId){
      return cart;
 
     } catch (error) {
-        console.log(error);
-        throw new internalServerError();
-        
+      if (error.name === "ValidationError") {
+        const errorMessageList = Object.keys(error.errors).map((property) => {
+          return error.errors[property].message;
+        });
+        throw new BadRequestError(errorMessageList);
+      } 
+     else if (error instanceof mongoose.Error.CastError) {
+      throw ({message:"Invalid ID format",statusCode:500});
+      }
+      throw new internalServerError();
     }
 }
 

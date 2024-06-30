@@ -4,16 +4,20 @@ const cloudinary = require("../../config/cloudinary.config");
 const {
   createProduct,
   getProduct,
-  deleteProduct,
+  deleteProduct,getallProduct
 } = require("../Repository/product.repository");
-const internalServerError = require("../utils/internalServerError");
 const NotFoundError = require("../utils/notFoundError");
+
+const BadRequestError = require("../utils/BadRequest");
+const AppError = require("../utils/appError");
+const internalServerError = require('../utils/notFoundError')
 const fs = require("fs");
 
 async function productCreate(productDetails) {
   // 1. we should check if an image is coming to create the rpoduct , then we should first upload it on cloudinary,
 
   const imagepath = productDetails.productImage;
+  console.log(imagepath);
 
 
   if (imagepath) {
@@ -58,11 +62,13 @@ async function productDelete(id) {
   const productId = id;
 
 try {
+
   const Product = await findProduct(id);
   if (!Product) {
     throw new NotFoundError("Product");
   }
 
+ if(Product.Image){
   const imageurl = Product.productImage;
   const parsedUrl = url.parse(imageUrl);
   const pathname = parsedUrl.pathname.split('/');
@@ -70,17 +76,33 @@ try {
   const publicId = filename.split('.')[0]; // Assuming the file has an extension
   const result = await cloudinary.uploader.destroy(publicId);
 
-  await deleteProduct(productId);
 
+ }
+
+  await deleteProduct(productId);
   return Product;
 } catch (error) {
-  throw internalServerError();
+  throw new internalServerError();
 }
 
 
 }
+
+
+async function findallProduct() {
+  
+  const products = await getallProduct();
+
+  if (!products) {
+    throw new NotFoundError("Products");
+  }
+
+  return products;
+}
+
+
 module.exports = {
   productCreate,
   findProduct,
-  productDelete,
+  productDelete,findallProduct
 };
