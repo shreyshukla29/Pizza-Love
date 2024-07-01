@@ -20,8 +20,8 @@ app.use(
   cors({
     origin: ServerConfig.Frontend_URL, // Replace with your Vercel app URL
     credentials: true, // Set to true if you need to allow cookies or other credentials
-    methods: '*',  // Allow all HTTP methods
-    allowedHeaders: 'Content-Type,Authorization'
+   
+  
   })
 );
 app.use(express.json());
