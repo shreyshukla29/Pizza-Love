@@ -15,9 +15,10 @@ const orderRouter = require("./routers/order.routes");
 const fs = require("fs");
 const productRouter = require("./routers/product.router");
 const cors = require("cors");
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ServerConfig.Frontend_URL,
     credentials: true,
   })
 );
