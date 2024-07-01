@@ -48,6 +48,8 @@ async function logout(req, res) {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
+  console.log("resp return")
+
   return res.status(200).json({
     success: true,
     message: "Log out successfull",
@@ -56,10 +58,13 @@ async function logout(req, res) {
   });
 }
 
+
+
+
 async function regenerateToken(req ,res){
 
   const payload = req.user;
-  console.log('hit refresh')
+  console.log('refreshing token')
 
   try {
     const response = await refereshtoken(payload);

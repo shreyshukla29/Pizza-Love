@@ -44,7 +44,7 @@ async function getOrderDetails(orderId) {
 async function getAllOrders(userId){
 
   try {
-    const order = await Order.find({user:userId});
+    const order = await Order.find({user:userId}).populate('items.product');
     return order;
  }  catch (error) {
   if (error.name === "ValidationError") {

@@ -19,6 +19,8 @@ async function isLoggedIn(req, res, next) {
       throw new unauthorisedError();
     }
 
+    console.log('user is verified')
+
     // if decode the user is authencticated
     req.user = {
       email: decode.email,
@@ -52,6 +54,8 @@ async function checkInvalidToken(req, res, next) {
   } catch (err) {
     // Handle different types of errors
     if (err.name === "TokenExpiredError") {
+
+      console.log('token expired')
       const decode = jwt.decode(token);
 
       req.user = {

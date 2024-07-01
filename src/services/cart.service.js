@@ -13,7 +13,7 @@ async function getCart(userId) {
     if (!cart) {
       throw new NotFoundError("Cart");
     }
-    return cart;
+    return cart.populate('items.product')
   } catch (error) {
     throw new internalServerError();
     

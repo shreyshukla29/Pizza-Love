@@ -1,6 +1,8 @@
 const { requestOrder , requestOrderCancel,getOrderDetailsofUser,getAllOrderDetails, updateOrderStatus } = require("../services/order.service");
 const AppError = require('../utils/appError')
 const mongoose = require('mongoose')
+
+
 async function placeOrder(req, res) {
   const orderDetails = req.body;
   const userId = req.user.id;
@@ -75,6 +77,7 @@ async function orderDetails(req ,res) {
 
   try {
     const order = await getOrderDetailsofUser(orderId);
+    console.log('order of user',order)
     return res.status(200).json({
         sucess:true,
         data:order,
@@ -108,6 +111,7 @@ async function allOrderDetailsofUser(req ,res){
   const userId = req.user.id;
   try {
     const order = await getAllOrderDetails(userId);
+    console.log('orders of user',order)
     return res.status(200).json({
         sucess:true,
         data:order,
