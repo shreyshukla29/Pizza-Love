@@ -35,7 +35,7 @@ async function isLoggedIn(req, res, next) {
     next();
   } catch (error) {
     console.log('user not verified')
-    return res.status(401).json({
+    return res.status(500).json({
       success: false,
       data: {},
       error: error,
@@ -49,6 +49,7 @@ async function checkInvalidToken(req, res, next) {
  
   const token = req.cookies["authToken"];
   console.log('checking token validation') 
+  
   try {
     // Verify the token using the secret key
     await jwt.verify(token, JWT_SECRET);
@@ -72,9 +73,9 @@ async function checkInvalidToken(req, res, next) {
       };
       next();
     } else {
-      return res
-        .json({ isValid: false, message: "Invalid", verfiy: false })
-        .status(500);
+      console.log('invalid')
+      return res.status(500).json({ isValid: false, message: "Invalid", verfiy: false })
+        
     }
   }
 }

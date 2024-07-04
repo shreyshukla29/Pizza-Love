@@ -4,16 +4,17 @@ const mongoose = require("mongoose");
 const ServerConfig = require("../../config/serverConfig");
 async function login(req, res) {
   const loginPayload = req.body;
-  console.log('here')
+
 
   try {
     const response = await loginUser(loginPayload);
     console.log("resp", response);
     res.cookie("authToken", response.token, {
       httpOnly: true,
-      secure: false, // Set to true in production
+      secure:ServerConfig.PRODUCTION ==='true', // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-     
+       sameSite: 'None'
+      
     });
     return res
       .status(200)
@@ -49,9 +50,9 @@ async function logout(req, res) {
   console.log("hit");
   res.cookie("authToken", "", {
     httpOnly: true,
-    secure: false, // Set to true in production
+    secure:ServerConfig.PRODUCTION ==='true', // Set to true in production
     maxAge: 7 * 24 * 60 * 60 * 1000,
-   
+     sameSite: 'None'
   });
 
   console.log("resp return");
@@ -67,15 +68,16 @@ async function logout(req, res) {
 async function regenerateToken(req, res) {
   const payload = req.user;
   console.log("refreshing token");
+  
 
   try {
     const response = await refereshtoken(payload);
     console.log("token regenerate", response);
     res.cookie("authToken", response.token, {
       httpOnly: true,
-      secure: false, // Set to true in production
+      secure:ServerConfig.PRODUCTION ==='true', // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-   
+      sameSite: 'None'
     });
 
     return res.status(200).json({
