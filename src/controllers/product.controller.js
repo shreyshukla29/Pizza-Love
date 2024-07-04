@@ -19,6 +19,7 @@ async function addProduct(req, res) {
       InStock: req.body.InStock,
       quantity: req.body.quantity,
     });
+    console.log('product add successs')
 
     return res.status(201).json({
       success: true,
@@ -27,12 +28,13 @@ async function addProduct(req, res) {
       data: product,
     });
   } catch (error) {
+
     if (
       error instanceof AppError ||
       error instanceof mongoose.Error.CastError
     ) {
       
-
+      
       return res.status(error.statusCode).json({
         message: error.message,
         success: false,
@@ -54,12 +56,15 @@ async function addProduct(req, res) {
 
 async function getProduct(req, res) {
   const id = req.params.id;
+  console.log("product id",id);
   try {
     const product = await findProduct(id);
+
     return res
       .status(201)
       .json({ message: "product is available", details: product });
   } catch (error) {
+   
     if (
       error instanceof AppError ||
       error instanceof mongoose.Error.CastError

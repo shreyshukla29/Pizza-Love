@@ -37,15 +37,18 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         minLength:[10 , 'Address should be of atlest 10 characters'],
         required:true,
-
     },
     paymentMethod : {
         type:String,
         enum:['ONLINE','COD'],
-        default:'COD',
+        default:'ONLINE',
         required:true,
 
     },
+    paymentId : {
+      type:String,
+      required:true
+    }
 
 },  {
     timestamps: true,

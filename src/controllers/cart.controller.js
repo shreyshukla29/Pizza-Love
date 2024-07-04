@@ -4,8 +4,14 @@ const mongoose = require('mongoose')
 async function getCartbyUser(req, res) {
   const userId = req.user.id;
 
+  console.log(userId)
+
+
   try {
     const cart = await getCart(userId);
+
+    console.log('cart fetched')
+
     return res.status(200).json({
       success: true,
       message: "Successfully fetched the cart",
@@ -13,6 +19,8 @@ async function getCartbyUser(req, res) {
       data: cart,
     });
   }  catch (error) {
+
+    console.log('cart not fetched')
 
     if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
           return res.status(error.statusCode).json({

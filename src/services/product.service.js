@@ -54,6 +54,7 @@ async function findProduct(id) {
   if (!product) {
     throw new NotFoundError("Product");
   }
+  
 
   return product;
 }

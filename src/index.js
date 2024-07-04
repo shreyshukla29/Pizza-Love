@@ -16,12 +16,13 @@ const fs = require("fs");
 const productRouter = require("./routers/product.router");
 const cors = require("cors");
 
+const paymentRouter = require('./routers/payment.route')
+
+
 app.use(
   cors({
     origin: ServerConfig.Frontend_URL, // Replace with your Vercel app URL
     credentials: true, // Set to true if you need to allow cookies or other credentials
-   
-  
   })
 );
 app.use(express.json());
@@ -34,6 +35,7 @@ app.use("/auth", authRouter);
 app.use("/products", productRouter);
 
 app.use("/orders", orderRouter);
+app.use('/payment',paymentRouter);
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();

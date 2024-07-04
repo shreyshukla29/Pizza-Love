@@ -5,11 +5,11 @@ const {
   getAllOrders,
 } = require("../Repository/order.repository");
 const NotFoundError = require("../utils/notFoundError");
-
 const BadRequestError = require("../utils/BadRequest");
 const AppError = require("../utils/appError");
 const internalServerError = require("../utils/notFoundError");
 const { emptyCart } = require("../services/cart.service");
+
 async function requestOrder(orderDetails, userId) {
   try {
     const cart = await getCartByUserId(userId);
@@ -35,6 +35,7 @@ async function requestOrder(orderDetails, userId) {
       })),
       paymentMethod: orderDetails.paymentMethod,
       address: orderDetails.address,
+      paymentId: orderDetails.paymentId,
       totalPrice,
     };
 
@@ -74,7 +75,7 @@ async function getOrderDetailsofUser(orderId) {
     if (!order) {
       throw new NotFoundError("Order");
     }
-    return order;
+    return order.populate("items.product");
   } catch (error) {
     throw new internalServerError();
   }
@@ -86,8 +87,7 @@ async function getAllOrderDetails(userId) {
     if (!allorder) {
       throw new NotFoundError("Orders");
     }
-    
-   
+
     return allorder;
   } catch (error) {
     throw new internalServerError();

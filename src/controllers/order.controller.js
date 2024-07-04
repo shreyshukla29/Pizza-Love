@@ -6,17 +6,19 @@ const mongoose = require('mongoose')
 async function placeOrder(req, res) {
   const orderDetails = req.body;
   const userId = req.user.id;
+  console.log('order request received')
 
   try {
     const order = await requestOrder(orderDetails, userId);
     return res.status(200).json({
-        sucess:true,
+        success:true,
         data:order,
         message:'order placed succesfully',
         error:{}
       });
 
   }  catch (error) {
+    console.log(error)
 
     if(error instanceof AppError || error instanceof mongoose.Error.CastError) {
           return res.status(error.statusCode).json({
@@ -44,7 +46,7 @@ async function cancelOrder(req ,res){
     try {
         const order = await requestOrderCancel(orderId);
         return res.status(200).json({
-            sucess:true,
+            success:true,
             data:order,
             message:'order cancelled succesfully',
             error:{}
@@ -79,7 +81,7 @@ async function orderDetails(req ,res) {
     const order = await getOrderDetailsofUser(orderId);
     console.log('order of user',order)
     return res.status(200).json({
-        sucess:true,
+        success:true,
         data:order,
         message:'order fetch succesfully',
         error:{}
@@ -113,7 +115,7 @@ async function allOrderDetailsofUser(req ,res){
     const order = await getAllOrderDetails(userId);
     console.log('orders of user',order)
     return res.status(200).json({
-        sucess:true,
+        success:true,
         data:order,
         message:'orders fetch  succesfully',
         error:{}

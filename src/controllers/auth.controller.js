@@ -1,26 +1,33 @@
-const { loginUser , refereshtoken } = require("../services/auth.service");
-const AppError = require('../utils/appError')
-const mongoose = require('mongoose')
-const  ServerConfig = require("../../config/serverConfig");
+const { loginUser, refereshtoken } = require("../services/auth.service");
+const AppError = require("../utils/appError");
+const mongoose = require("mongoose");
+const ServerConfig = require("../../config/serverConfig");
 async function login(req, res) {
   const loginPayload = req.body;
-
+  console.log('here')
 
   try {
     const response = await loginUser(loginPayload);
-    console.log("resp",response);
-
+    console.log("resp", response);
     res.cookie("authToken", response.token, {
       httpOnly: true,
-      secure:ServerConfig.PRODUCTION ==='true', // Set to true in production
+      secure: false, // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'None'
+     
     });
     return res
       .status(200)
-      .json({ success: true, message: "Login successful", data: { userRole: response.userRole, userDetail: response.userDetail }, error: {} });
+      .json({
+        success: true,
+        message: "Login successful",
+        data: { userRole: response.userRole, userDetail: response.userDetail },
+        error: {},
+      });
   } catch (error) {
-    if (error instanceof AppError || error instanceof mongoose.Error.CastError) {
+    if (
+      error instanceof AppError ||
+      error instanceof mongoose.Error.CastError
+    ) {
       return res.status(error.statusCode || 400).json({
         success: false,
         message: error.message,
@@ -38,18 +45,16 @@ async function login(req, res) {
   }
 }
 
-
 async function logout(req, res) {
-
-  console.log('hit')
+  console.log("hit");
   res.cookie("authToken", "", {
     httpOnly: true,
-    secure: ServerConfig.PRODUCTION ==='true', // Set to true in production
+    secure: false, // Set to true in production
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: 'None'
+   
   });
 
-  console.log("resp return")
+  console.log("resp return");
 
   return res.status(200).json({
     success: true,
@@ -59,46 +64,34 @@ async function logout(req, res) {
   });
 }
 
-
-
-
-async function regenerateToken(req ,res){
-
+async function regenerateToken(req, res) {
   const payload = req.user;
-  console.log('refreshing token')
+  console.log("refreshing token");
 
   try {
     const response = await refereshtoken(payload);
-    console.log("token regenerate",response);
+    console.log("token regenerate", response);
     res.cookie("authToken", response.token, {
       httpOnly: true,
-      secure: ServerConfig.PRODUCTION ==='true', // Set to true in production
+      secure: false, // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'None'
+   
     });
 
     return res.status(200).json({
-      message : "token refresh successfully",
-      data : {},
-      error :{},
-      success :true,
-    })
-    
+      message: "token refresh successfully",
+      data: {},
+      error: {},
+      success: true,
+    });
   } catch (error) {
     return res.status(404).json({
-      message : 'no a valid token',
-      data:{},
-      error:{error},
-      success:false
-    })
-    
+      message: "no a valid token",
+      data: {},
+      error: { error },
+      success: false,
+    });
   }
-
-
-
-
-
 }
 
-
-module.exports = { login, logout,regenerateToken };
+module.exports = { login, logout, regenerateToken };

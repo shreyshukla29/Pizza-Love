@@ -4,13 +4,18 @@ const unauthorisedError = require("../utils/unauthorisedError");
 
 async function isLoggedIn(req, res, next) {
   const token = req.cookies["authToken"];
-  if (!token)
-    res.status(401).json({
-      success: false,
-      data: {},
-      error: "Not authenticated",
-      message: "No auth token provided",
-    });
+  console.log('is logged in')
+  if (!token){
+    console.log('no token provided')
+    return  res.status(401).json({
+       success: false,
+       data: {},
+       error: "Not authenticated",
+       message: "No auth token provided",
+     });
+
+  }
+   
 
   try {
     const decode = jwt.verify(token, JWT_SECRET);
@@ -29,6 +34,7 @@ async function isLoggedIn(req, res, next) {
     };
     next();
   } catch (error) {
+    console.log('user not verified')
     return res.status(401).json({
       success: false,
       data: {},
@@ -40,8 +46,9 @@ async function isLoggedIn(req, res, next) {
 
 async function checkInvalidToken(req, res, next) {
 
-  console.log('checking token validation')
+ 
   const token = req.cookies["authToken"];
+  console.log('checking token validation') 
   try {
     // Verify the token using the secret key
     await jwt.verify(token, JWT_SECRET);

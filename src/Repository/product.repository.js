@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 async function createProduct(productDetails) {
   try {
     const response = await Product.create(productDetails);
-
     return response;
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -26,6 +25,7 @@ async function createProduct(productDetails) {
 async function getProduct(productId) {
   try {
     const product = await Product.findById(productId);
+    console.log('product',product)
     return product;
   } catch (error) {
     if (error.name === "ValidationError") {
