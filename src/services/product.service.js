@@ -4,13 +4,15 @@ const cloudinary = require("../../config/cloudinary.config");
 const {
   createProduct,
   getProduct,
-  deleteProduct,getallProduct
+  deleteProduct,
+  getallProduct,
+  findProductAndUpdate,
 } = require("../Repository/product.repository");
 const NotFoundError = require("../utils/notFoundError");
 
 const BadRequestError = require("../utils/BadRequest");
 const AppError = require("../utils/appError");
-const internalServerError = require('../utils/notFoundError')
+const internalServerError = require("../utils/notFoundError");
 const fs = require("fs");
 
 async function productCreate(productDetails) {
@@ -18,7 +20,6 @@ async function productCreate(productDetails) {
 
   const imagepath = productDetails.productImage;
   console.log(imagepath);
-
 
   if (imagepath) {
     try {
@@ -34,7 +35,6 @@ async function productCreate(productDetails) {
       throw new internalServerError();
     }
   }
-
 
   const product = createProduct({
     ...productDetails,
@@ -54,7 +54,6 @@ async function findProduct(id) {
   if (!product) {
     throw new NotFoundError("Product");
   }
-  
 
   return product;
 }
@@ -62,36 +61,29 @@ async function findProduct(id) {
 async function productDelete(id) {
   const productId = id;
 
-try {
+  try {
+    const Product = await findProduct(id);
+    if (!Product) {
+      throw new NotFoundError("Product");
+    }
 
-  const Product = await findProduct(id);
-  if (!Product) {
-    throw new NotFoundError("Product");
+    if (Product.Image) {
+      const imageurl = Product.productImage;
+      const parsedUrl = url.parse(imageUrl);
+      const pathname = parsedUrl.pathname.split("/");
+      const filename = pathname[pathname.length - 1];
+      const publicId = filename.split(".")[0]; // Assuming the file has an extension
+      const result = await cloudinary.uploader.destroy(publicId);
+    }
+
+    await deleteProduct(productId);
+    return Product;
+  } catch (error) {
+    throw new internalServerError();
   }
-
- if(Product.Image){
-  const imageurl = Product.productImage;
-  const parsedUrl = url.parse(imageUrl);
-  const pathname = parsedUrl.pathname.split('/');
-  const filename = pathname[pathname.length - 1];
-  const publicId = filename.split('.')[0]; // Assuming the file has an extension
-  const result = await cloudinary.uploader.destroy(publicId);
-
-
- }
-
-  await deleteProduct(productId);
-  return Product;
-} catch (error) {
-  throw new internalServerError();
 }
-
-
-}
-
 
 async function findallProduct() {
-  
   const products = await getallProduct();
 
   if (!products) {
@@ -101,9 +93,20 @@ async function findallProduct() {
   return products;
 }
 
+async function updateProduct(productId, productDetails) {
+  const newproduct = await findProductAndUpdate(productId, productDetails);
+
+  if (!newproduct) {
+    throw new NotFoundError("Product");
+  }
+
+  return newproduct;
+}
 
 module.exports = {
   productCreate,
   findProduct,
-  productDelete,findallProduct
+  productDelete,
+  findallProduct,
+  updateProduct,
 };

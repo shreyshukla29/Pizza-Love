@@ -2,7 +2,7 @@ const {
   productCreate,
   findProduct,
   productDelete,
-  findallProduct,
+  findallProduct,updateProduct
 } = require("../services/product.service");
 
 const AppError = require("../utils/appError");
@@ -145,4 +145,44 @@ async function getProducts(req, res) {
   }
 }
 
-module.exports = { addProduct, getProduct, deleteProductById, getProducts };
+async  function UpdateProductDetails(req ,res){
+
+  console.log('update request');
+
+  const id = req.params.id;
+  const productDetails = req.body;
+
+  try {
+
+    const product =await updateProduct(id , productDetails)
+    console.log('updateed' ,product)
+    return res
+      .status(201)
+      .json({ message: "product fetch successfully", details: product
+        ,success:true,
+        error:{}
+       });
+    
+  } catch (error) {
+    if (
+      error instanceof AppError ||
+      error instanceof mongoose.Error.CastError
+    ) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+        data: {},
+        error: error,
+      });
+    }
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      data: {},
+      error: error,
+    });
+  }
+}
+
+module.exports = { addProduct, getProduct, deleteProductById, getProducts, UpdateProductDetails};

@@ -79,10 +79,30 @@ async function getallProduct() {
 }
 
 
+async function findProductAndUpdate(productId, productDetails) {
+  try {
+   
+    const newProduct = await Product.findByIdAndUpdate(productId, productDetails, { new: true });
+    return newProduct;
+  } catch (error) {
+    console.log(error)
+    if (error.name === "ValidationError") {
+      const errorMessageList = Object.keys(error.errors).map((property) => {
+        return error.errors[property].message;
+      });
+      throw new BadRequestError(errorMessageList);
+    } else if (error instanceof mongoose.Error.CastError) {
+      throw { message: "Invalid product format", statusCode: 400 };  
+    }
+    throw new InternalServerError();  
+  }
+}
+
+
 
 module.exports = {
   createProduct,
   getProduct,
   deleteProduct,
-  getallProduct
+  getallProduct, findProductAndUpdate
 };
