@@ -2,7 +2,8 @@ const {
   productCreate,
   findProduct,
   productDelete,
-  findallProduct,updateProduct
+  findallProduct,
+  updateProduct,
 } = require("../services/product.service");
 
 const AppError = require("../utils/appError");
@@ -19,7 +20,7 @@ async function addProduct(req, res) {
       InStock: req.body.InStock,
       quantity: req.body.quantity,
     });
-    console.log('product add successs')
+    console.log("product add successs");
 
     return res.status(201).json({
       success: true,
@@ -28,13 +29,10 @@ async function addProduct(req, res) {
       data: product,
     });
   } catch (error) {
-
     if (
       error instanceof AppError ||
       error instanceof mongoose.Error.CastError
     ) {
-      
-      
       return res.status(error.statusCode).json({
         message: error.message,
         success: false,
@@ -56,7 +54,7 @@ async function addProduct(req, res) {
 
 async function getProduct(req, res) {
   const id = req.params.id;
-  console.log("product id",id);
+  console.log("product id", id);
   try {
     const product = await findProduct(id);
 
@@ -64,7 +62,6 @@ async function getProduct(req, res) {
       .status(201)
       .json({ message: "product is available", details: product });
   } catch (error) {
-   
     if (
       error instanceof AppError ||
       error instanceof mongoose.Error.CastError
@@ -145,24 +142,21 @@ async function getProducts(req, res) {
   }
 }
 
-async  function UpdateProductDetails(req ,res){
-
-  console.log('update request');
+async function UpdateProductDetails(req, res) {
+  console.log("update request");
 
   const id = req.params.id;
   const productDetails = req.body;
 
   try {
-
-    const product =await updateProduct(id , productDetails)
-    console.log('updateed' ,product)
-    return res
-      .status(201)
-      .json({ message: "product fetch successfully", details: product
-        ,success:true,
-        error:{}
-       });
-    
+    const product = await updateProduct(id, productDetails);
+    console.log("updateed", product);
+    return res.status(201).json({
+      message: "product fetch successfully",
+      details: product,
+      success: true,
+      error: {},
+    });
   } catch (error) {
     if (
       error instanceof AppError ||
@@ -185,4 +179,10 @@ async  function UpdateProductDetails(req ,res){
   }
 }
 
-module.exports = { addProduct, getProduct, deleteProductById, getProducts, UpdateProductDetails};
+module.exports = {
+  addProduct,
+  getProduct,
+  deleteProductById,
+  getProducts,
+  UpdateProductDetails,
+};
