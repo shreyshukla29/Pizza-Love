@@ -21,6 +21,24 @@ class UserRepository {
     }
   }
 
+  async findUserbyId(userId){
+    try {
+      const user = await User.findById(userId);
+      return user;
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errorMessageList = Object.keys(error.errors).map((property) => {
+          return error.errors[property].message;
+        });
+        throw new BadRequestError(errorMessageList);
+      } 
+     else if (error instanceof mongoose.Error.CastError) {
+      throw ({message:"Invalid user details  format",statusCode:500});
+      }
+      throw new internalServerError();
+    }
+  }
+
   async createUser(userDetails) {
     try {
       const response = await User.create({ ...userDetails });

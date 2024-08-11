@@ -15,9 +15,8 @@ const orderRouter = require("./routers/order.routes");
 const fs = require("fs");
 const productRouter = require("./routers/product.router");
 const cors = require("cors");
-
-const paymentRouter = require('./routers/payment.route')
-
+const mongoose = require("mongoose");
+const paymentRouter = require("./routers/payment.route");
 
 app.use(
   cors({
@@ -35,7 +34,7 @@ app.use("/auth", authRouter);
 app.use("/products", productRouter);
 
 app.use("/orders", orderRouter);
-app.use('/payment',paymentRouter);
+app.use("/payment", paymentRouter);
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
