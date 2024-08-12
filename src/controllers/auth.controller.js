@@ -12,7 +12,7 @@ async function login(req, res) {
       httpOnly: true,
       secure: ServerConfig.PRODUCTION === "true", // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      //  sameSite: 'None'
+        sameSite: 'None'
     });
     return res.status(200).json({
       success: true,
@@ -48,7 +48,7 @@ async function logout(req, res) {
     httpOnly: true,
     secure: ServerConfig.PRODUCTION === "true", // Set to true in production
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    // sameSite: 'None'
+     sameSite: 'None'
   });
 
   console.log("resp return");
@@ -72,7 +72,7 @@ async function regenerateToken(req, res) {
       httpOnly: true,
       secure: ServerConfig.PRODUCTION === "true", // Set to true in production
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      // sameSite: 'None'
+       sameSite: 'None'
     });
 
     return res.status(200).json({
